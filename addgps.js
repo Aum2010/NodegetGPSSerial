@@ -1,0 +1,115 @@
+const util = require('util');
+const express = require('express')
+const app = express()
+//const port = 433433
+const bodyParser = require('body-parser')
+var cors = require('cors')
+const fs = require('fs');
+const sys = require('util');
+
+
+app.use(cors())
+app.use(bodyParser.urlencoded({extended: true }))
+const exec = util.promisify(require('child_process').exec);
+
+
+
+
+
+//********************************//
+
+const SerialPort = require('serialport');
+const parsers = SerialPort.parsers;
+
+SerialPort.list(function (err, ports) {
+  console.log(ports);
+});
+
+const parser = new parsers.Readline({
+  delimiter: '\r\n'
+});
+
+const port = new SerialPort('/dev/ttyAMA0', {
+  baudRate: 9600
+});
+
+port.pipe(parser);
+
+var GPS = require('gps');
+var gps = new GPS;
+var set_lat
+var set_lon
+/*
+gps.on('data', function(data) {
+
+  console.log(data);
+
+});
+
+*/
+/*
+if(set_lat && set_lon){
+
+}else{
+	  gps.on('GLL',({lat,lon}) => {
+             // console.log({lat,lon})
+              set_lat = lat 
+              set_lon = lon
+              var array = [];
+              array.push({lat,lon})
+              console.log(array)      
+         })
+
+        parser.on('data', function(data) {
+          gps.update(data);
+        });
+
+} */
+/*
+	gps.on('GLL',({lat,lon}) => {
+	     // console.log({lat,lon})
+	      set_lat = lat 
+	      set_lon =  lon
+		var array = [];
+		array.push({lat,lon})
+		console.log(array)	
+	 })
+
+	parser.on('data', function(data) {
+	  gps.update(data);
+	});
+*/
+const port_ = 8888
+app.get('/gps',(req,res) => {
+	var arr=[];
+	//************************
+       gps.on('GLL',({lat,lon}) => {
+             // console.log({lat,lon})
+              set_lat = lat 
+              set_lon =  lon
+                var array = [];
+                array.push({lat,lon})
+                console.log(array)
+		gps.off('GLL')
+         })
+	
+        parser.on('data', function(data) {
+	        gps.update(data);
+
+        });
+	
+//	gps.off()
+
+	//************************
+	arr.push({"lat":set_lat,"lng":set_lon})
+        res.json(arr)
+    //gps.on('data',({lat,lon}) => {res.json({lat,lon})});
+})
+
+app.listen(port_, () => {
+        console.log(`Get Lat Long From!! http://localhost:${port_}`)
+})
+
+
+
+
