@@ -64,7 +64,7 @@ var gps = new GPS;
 var set_lat
 var set_lon
 var mytime
-
+const port_ = 60146
 /*
 gps.on('data', function(data) {
 
@@ -110,7 +110,6 @@ try {
 
 }
 
-const port_ = 8888
 app.get('/gps',(req,res) => {
 	var arr=[];
 	//************************
