@@ -20,6 +20,7 @@ const MQTT_PORT = "xxxx";
 const MQTT_USER = ""; 
 const MQTT_PASSWORD = "";
 var node = 1
+var countertime = 0;
 
 var client = mqtt.connect({
     host: MQTT_SERVER,
@@ -180,3 +181,17 @@ app.post('/print',(req,res) => {
 // Printer Function
 
 
+function count1week() {
+    app.get('/reset',(req , res) => {
+        countertime = 0;
+        res.json({"Succ":"1"}).status(200)
+    })
+    if(countertime > 60){
+        countertime = 0;
+	client.publish(`1weeknode${node}` , JSON.stringify({}))    
+    }
+    countertime++;
+    console.log(countertime)
+}
+
+setInterval(count1week , 1000);
