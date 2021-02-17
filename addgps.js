@@ -7,6 +7,9 @@ var cors = require('cors')
 const fs = require('fs');
 const sys = require('util');
 var mqtt = require('mqtt');
+const mcpadc = require('mcp-spi-adc');
+
+
 
 app.use(cors())
 app.use(bodyParser.json({limit: '50mb'}))
@@ -14,8 +17,8 @@ app.use(bodyParser.urlencoded({limit: '50mb',extended: true }))
 const exec = util.promisify(require('child_process').exec);
 
 //*********************** MQTT Config ****************************//
-const MQTT_SERVER = "34.xx.xxx.xxx";
-const MQTT_PORT = "xxxx";
+const MQTT_SERVER = "34";
+const MQTT_PORT = "";
 //if your server don't have username and password let blank.
 const MQTT_USER = ""; 
 const MQTT_PASSWORD = "";
@@ -174,7 +177,7 @@ app.post('/print',(req,res) => {
 	fs.writeFile('image.png', base64Image, {encoding: 'base64'}, function(err) {
 	  console.log('File created');
 	});
-//	lsWithGrep();  //<-- Enable Printer
+	lsWithGrep();  //<-- Enable Printer
 	res.json({"msg":"1"})
 	res.status(200)
 })
@@ -195,3 +198,24 @@ function count1week() {
 }
 
 setInterval(count1week , 1000);
+
+
+//** Check Voltage Function ***
+
+const tempSensor = mcpadc.openMcp3208(0,{}, err => {
+  if (err) throw err;
+ 
+setInterval(_ => {
+    tempSensor.read((err, reading) => {
+      if (err) throw err;
+ 
+      //console.log((reading.value * 3.3 - 0.5) * 100);
+        console.log(reading.value)
+        if(reading.value < 0.3){
+                console.log("Warnnig Low Voltage!!")
+		client.publish(`voltagenode${node}` , JSON.stringify({}))
+        }
+    });
+  }, 1000);
+});
+
