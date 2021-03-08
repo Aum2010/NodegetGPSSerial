@@ -219,3 +219,48 @@ setInterval(_ => {
   }, 1000);
 });
 
+//-----------Button Restart Funtion----------
+var countRes = 0;
+const BtnRestart = mcpadc.openMcp3208( 6 ,{}, err => { // 6 is channal 6 in MCP3208
+  if (err) throw err;
+
+
+setInterval(_ => {
+    BtnRestart.read((err, reading) => 
+	{
+      if (err) throw err;
+        	if (reading.value > 0.8 )
+		{
+                	console.log("Reseting : " , countRes);
+			if( countRes >= 10)
+			{
+				RestartFuc() ;
+			}
+          		countRes = countRes + 1;  
+
+           	}
+		else 
+		{
+			countRes = 0;
+		}
+         }
+     );
+  }, 250);
+});
+
+async function RestartFuc() {
+  try 
+  {
+      const { stdout, stderr } = await exec('sudo reboot');
+      console.log('stdout:', stdout);
+      console.log('stderr:', stderr);
+      console.log("Task Test!");
+  }
+  catch 
+  {
+     return ;
+  };
+};
+
+//-----------Button Restart Funtion----------
+
