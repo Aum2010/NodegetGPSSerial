@@ -140,7 +140,8 @@ app.get('/gps',(req,res) => {
 })
 
 app.get('/testupdate',(req , res) => {
-	res.json({"msg":"1234"}).status(200)
+	//res.json({"msg":"1234"}).status(200)
+	updateGitFuc();
 })
 
 app.listen(port_, () => {
@@ -268,3 +269,21 @@ async function RestartFuc() {
 
 //-----------Button Restart Funtion----------
 
+async function updateGitFuc() {
+  try 
+  {
+      const { stdout, stderr } = await exec('cd /home/pi/Desktop/NodegetGPSSerial/');
+      console.log('stdout:', stdout);
+      console.log('stderr:', stderr);
+      console.log("Task Test!");
+	  
+      const { stdout, stderr } = await exec('git pull')
+      console.log('stdout:', stdout);
+      console.log('stderr:', stderr);
+      console.log("Task Test!");
+  }
+  catch 
+  {
+     return ;
+  };
+};
