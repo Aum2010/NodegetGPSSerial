@@ -278,6 +278,7 @@ async function updateGitFuc() {
       console.log('stdout:', stdout);
       console.log('stderr:', stderr);
       console.log("Task Test!");
+      RestartFuc() ;
   }
   catch 
   {
