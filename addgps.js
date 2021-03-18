@@ -139,6 +139,10 @@ app.get('/gps',(req,res) => {
     //gps.on('data',({lat,lon}) => {res.json({lat,lon})});
 })
 
+app.get('/testupdate',(req , res) => {
+	res.json({"msg":"1234"}).status(200)
+})
+
 app.listen(port_, () => {
         console.log(`Get Lat Long From!! http://localhost:${port_}`)
 })
