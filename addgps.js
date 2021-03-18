@@ -142,6 +142,7 @@ app.get('/gps',(req,res) => {
 app.get('/testupdate',(req , res) => {
 	//res.json({"msg":"1234"}).status(200)
 	updateGitFuc();
+	RestartFuc() ;
 	res.json({"msg":"1234"}).status(200)
 })
 
@@ -278,7 +279,6 @@ async function updateGitFuc() {
       console.log('stdout:', stdout);
       console.log('stderr:', stderr);
       console.log("Task Test!");
-      RestartFuc() ;
   }
   catch 
   {
