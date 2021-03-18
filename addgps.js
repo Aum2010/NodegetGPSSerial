@@ -9,7 +9,6 @@ const sys = require('util');
 var mqtt = require('mqtt');
 const mcpadc = require('mcp-spi-adc');
 
-//Test Update
 
 app.use(cors())
 app.use(bodyParser.json({limit: '50mb'}))
@@ -139,12 +138,6 @@ app.get('/gps',(req,res) => {
     //gps.on('data',({lat,lon}) => {res.json({lat,lon})});
 })
 
-app.get('/testupdate',(req , res) => {
-	//res.json({"msg":"1234"}).status(200)
-	updateGitFuc();
-	RestartFuc() ;
-	res.json({"msg":"1234"}).status(200)
-})
 
 app.listen(port_, () => {
         console.log(`Get Lat Long From!! http://localhost:${port_}`)
@@ -270,18 +263,3 @@ async function RestartFuc() {
 };
 
 //-----------Button Restart Funtion----------
-
-async function updateGitFuc() {
-  try 
-  {
-      await exec('cd /home/pi/Desktop/NodegetGPSSerial/');
-      const { stdout, stderr } = await exec('git pull')
-      console.log('stdout:', stdout);
-      console.log('stderr:', stderr);
-      console.log("Task Test!");
-  }
-  catch 
-  {
-     return ;
-  };
-};
