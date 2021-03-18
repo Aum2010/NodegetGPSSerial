@@ -142,6 +142,7 @@ app.get('/gps',(req,res) => {
 app.get('/testupdate',(req , res) => {
 	//res.json({"msg":"1234"}).status(200)
 	updateGitFuc();
+	res.json({"msg":"1234"}).status(200)
 })
 
 app.listen(port_, () => {
