@@ -189,7 +189,7 @@ function count1week() {
         countertime = 0;
         res.json({"Succ":"1"}).status(200)
     })
-    if(countertime > 60){
+    if(countertime > 10){
         countertime = 0;
 	client.publish(`1weeknode${node}` , JSON.stringify({}))    
     }
