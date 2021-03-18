@@ -272,11 +272,7 @@ async function RestartFuc() {
 async function updateGitFuc() {
   try 
   {
-      const { stdout, stderr } = await exec('cd /home/pi/Desktop/NodegetGPSSerial/');
-      console.log('stdout:', stdout);
-      console.log('stderr:', stderr);
-      console.log("Task Test!");
-	  
+      await exec('cd /home/pi/Desktop/NodegetGPSSerial/');
       const { stdout, stderr } = await exec('git pull')
       console.log('stdout:', stdout);
       console.log('stderr:', stderr);
