@@ -39,6 +39,12 @@ client.on('connect', function () {
             console.log(err);
         }
     });
+       client.subscribe(`resetnode${node}`, function (err) {
+        if (err) {
+            console.log(err);
+        }
+    });
+
 });
 
 
@@ -154,8 +160,15 @@ client.on('message', (topic, message) => {
         client.publish(`node${node}`, JSON.stringify({"node":node ,"lat":set_lat ,"lng":set_lon,"status":true}));
     }
 
+   if( topic == `resetnode${node}` ) {
+	console.log("Reset!!");
+        RestartFuc() ;
+   }
+
 });
-// Lat Lng Steam 
+// Lat Lng Steam
+
+ 
 
 // Printer Function
 async function lsWithGrep() {
