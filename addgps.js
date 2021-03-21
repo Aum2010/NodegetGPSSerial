@@ -157,7 +157,14 @@ client.on('message', (topic, message) => {
     //console.log(JSON.parse(message));
     if(message.msg === node){
         console.log(`NODE ${node}`)
-        client.publish(`node${node}`, JSON.stringify({"node":node ,"lat":set_lat ,"lng":set_lon,"status":true}));
+	if(set_lat && set_lon){
+		client.publish(`node${node}`, JSON.stringify({"node":node ,"lat":set_lat ,"lng":set_lon,"status":true}));
+
+	}else{
+		//client.publish(`node${node}`, JSON.stringify({"node":node ,"lat":0 ,"lng":0,"status":true}));
+
+	}
+        //client.publish(`node${node}`, JSON.stringify({"node":node ,"lat":set_lat ,"lng":set_lon,"status":true}));
     }
 
    if( topic == `resetnode${node}` ) {
@@ -224,7 +231,7 @@ setInterval(_ => {
  
       //console.log((reading.value * 3.3 - 0.5) * 100);
         console.log(reading.value)
-        if(reading.value < 0.3){
+        if(reading.value < 0.3 && reading.value > 0.2){
                 console.log("Warnnig Low Voltage!!")
 		client.publish(`voltagenode${node}` , JSON.stringify({}))
         }
