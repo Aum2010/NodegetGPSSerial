@@ -16,8 +16,8 @@ app.use(bodyParser.urlencoded({limit: '50mb',extended: true }))
 const exec = util.promisify(require('child_process').exec);
 
 //*********************** MQTT Config ****************************//
-const MQTT_SERVER = "34.64.169.182";
-const MQTT_PORT = "1883";
+const MQTT_SERVER = "34";
+const MQTT_PORT = "";
 //if your server don't have username and password let blank.
 const MQTT_USER = ""; 
 const MQTT_PASSWORD = "";
