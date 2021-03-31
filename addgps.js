@@ -8,7 +8,7 @@ const fs = require('fs');
 const sys = require('util');
 var mqtt = require('mqtt');
 const mcpadc = require('mcp-spi-adc');
-
+var Jimp = require('jimp');
 
 app.use(cors())
 app.use(bodyParser.json({limit: '50mb'}))
@@ -16,13 +16,16 @@ app.use(bodyParser.urlencoded({limit: '50mb',extended: true }))
 const exec = util.promisify(require('child_process').exec);
 
 //*********************** MQTT Config ****************************//
-const MQTT_SERVER = "34";
-const MQTT_PORT = "";
+const MQTT_SERVER = "34.64.169.182";
+const MQTT_PORT = "1883";
 //if your server don't have username and password let blank.
 const MQTT_USER = ""; 
 const MQTT_PASSWORD = "";
 var node = 1
 var countertime = 0;
+
+var time_1week = 604800
+var time_1week_status = false;
 
 var client = mqtt.connect({
     host: MQTT_SERVER,
@@ -44,6 +47,12 @@ client.on('connect', function () {
             console.log(err);
         }
     });
+	client.subscribe(`enable1week`, function (err) {
+        if (err) {
+            console.log(err);
+        }
+    });
+
 
 });
 
@@ -172,6 +181,16 @@ client.on('message', (topic, message) => {
         RestartFuc() ;
    }
 
+   if( topic == `enable1week` ) {
+	time_1week_status = !time_1week_status ;
+	if( time_1week_status ){
+		time_1week = 60;
+	}else{
+		time_1week = 604800;
+	}
+	console.log("Status 1 week : " + time_1week_status)
+   }
+
 });
 // Lat Lng Steam
 
@@ -197,19 +216,25 @@ app.post('/print',(req,res) => {
 	fs.writeFile('image.png', base64Image, {encoding: 'base64'}, function(err) {
 	  console.log('File created');
 	});
-	lsWithGrep();  //<-- Enable Printer
+	//**
+
+	//**
+	//lsWithGrep();  //<-- Enable Printer
 	res.json({"msg":"1"})
+
 	res.status(200)
 })
 // Printer Function
 
-
 function count1week() {
     app.get('/reset',(req , res) => {
         countertime = 0;
-        res.json({"Succ":"1"}).status(200)
+        res.json({"Succ":"1" , "count":countertime}).status(200)
     })
-    if(countertime > 10){
+    app.get('/count', (req , res) => {
+	res.json({"count":countertime , "time1week":time_1week}).status(200)
+    })
+    if(countertime > time_1week){
         countertime = 0;
 	client.publish(`1weeknode${node}` , JSON.stringify({}))    
     }
